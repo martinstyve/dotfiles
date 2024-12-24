@@ -1,5 +1,4 @@
-
--- Konfigurer lazy.nvim
+-- config lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -20,7 +19,15 @@ require("plugins")
 vim.opt.tabstop = 2  
 vim.opt.shiftwidth = 2 
 vim.opt.expandtab = true
+vim.opt.showmode = false
+vim.opt.undofile = true
+vim.opt.updatetime = 250
+vim.opt.splitright = true
 
+vim.opt.list = true
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+
+vim.opt.scrolloff = 10
 
 vim.o.number = true
 vim.o.colorcolumn = "80"
@@ -31,4 +38,3 @@ vim.o.backup = false
 vim.o.writebackup = false
 vim.o.swapfile = false
 vim.o.emoji = false
-
