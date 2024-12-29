@@ -1,0 +1,301 @@
+{
+	"name": "sql-formatter-vsc",
+	"displayName": "SQL Formatter VSCode",
+	"description": "Official VSCode Extension of SQL Formatter library",
+	"version": "4.1.5",
+	"publisher": "ReneSaarsoo",
+	"contributors": [
+		"Ben (benfdking)",
+		"Boris Verkhovskiy <boris.verk@gmail.com>",
+		"Heungsub Lee <heungsub@subl.ee>",
+		"Hisaki Akaza (the-red)",
+		"inferrinizzard <inferrinizzard@gmail.com>",
+		"Justin Carrus <carrus.justin@gmail.com>",
+		"Rene Saarsoo <nene@triin.net>",
+		"Sean Song <mail@seansong.dev>",
+		"Tomoyuki Saoi <tomoyuki.saoi@hq-hq.co.jp>"
+	],
+	"license": "MIT",
+	"icon": "sql-formatter-icon.png",
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/sql-formatter-org/sql-formatter-vscode"
+	},
+	"bugs": {
+		"url": "https://github.com/sql-formatter-org/sql-formatter/issues"
+	},
+	"categories": [
+		"Formatters",
+		"Other"
+	],
+	"keywords": [
+		"bigquery",
+		"db2",
+		"db2i",
+		"hive",
+		"formatter",
+		"mariadb",
+		"mssql",
+		"mysql",
+		"node",
+		"n1ql",
+		"plsql",
+		"pl/sql",
+		"postgres",
+		"postgresql",
+		"presto",
+		"prettier",
+		"redshift",
+		"singlestoredb",
+		"snowflake",
+		"spark",
+		"sparksql",
+		"sql",
+		"sqlite",
+		"sql server",
+		"tidb",
+		"trino",
+		"transactsql",
+		"tsql"
+	],
+	"activationEvents": [
+		"onStartupFinished"
+	],
+	"main": "./out/extension.js",
+	"browser": "./out/extension.js",
+	"scripts": {
+		"clean": "rimraf out .vscode-test",
+		"compile": "tsc --project ./tsconfig.json",
+		"compile:types": "tsc --emitDeclarationOnly --project ./tsconfig.json",
+		"watch": "tsc --watch --project ./",
+		"build": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+		"build:prod": "yarn run build --minify && yarn run compile:types",
+		"build:dev": "yarn run build --sourcemap && yarn run compile:types",
+		"vscode:prepublish": "yarn run build:prod",
+		"lint": "eslint src --ext ts",
+		"pretest": "yarn run compile && yarn run lint",
+		"test": "node ./out/test/runTest.js",
+		"vsce:package": "vsce package",
+		"vsce:publish": "vsce publish",
+		"run-in-browser": "vscode-test-web --browserType=chromium --open-devtools --extensionDevelopmentPath=. ."
+	},
+	"dependencies": {
+		"sql-formatter": "^15.4.7"
+	},
+	"devDependencies": {
+		"@types/glob": "^8.1.0",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "16.x",
+		"@types/vscode": "^1.75.0",
+		"@typescript-eslint/eslint-plugin": "^6.2.1",
+		"@typescript-eslint/parser": "^6.2.1",
+		"@vscode/test-electron": "^2.3.8",
+		"@vscode/test-web": "^0.0.44",
+		"esbuild": "^0.18.19",
+		"eslint": "^8.46.0",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-plugin-prettier": "^5.0.0",
+		"glob": "^8.0.0",
+		"mocha": "^10.2.0",
+		"prettier": "^3.0.1",
+		"typescript": "^5.1.6",
+		"vsce": "^2.15.0"
+	},
+	"contributes": {
+		"languages": [
+			{
+				"id": "sql",
+				"aliases": [
+					"SQL",
+					"sql"
+				],
+				"extensions": [
+					".sql",
+					".q"
+				]
+			}
+		],
+		"commands": [
+			{
+				"title": "Format Selection (SQL Formatter VSCode)",
+				"shortTitle": "Format SQL",
+				"command": "sql-formatter-vscode.format-selection"
+			}
+		],
+		"configuration": {
+			"title": "SQL Formatter VSCode",
+			"properties": {
+				"SQL-Formatter-VSCode.dialect": {
+					"type": "string",
+					"enum": [
+						"auto-detect",
+						"bigquery",
+						"db2",
+						"db2i",
+						"hive",
+						"mariadb",
+						"mysql",
+						"n1ql",
+						"plsql",
+						"postgresql",
+						"redshift",
+						"singlestoredb",
+						"snowflake",
+						"spark",
+						"sqlite",
+						"tidb",
+						"trino",
+						"transactsql",
+						"sql"
+					],
+					"enumDescriptions": [
+						"Rely on VSCode to detect the relevant SQL dialect.",
+						"Google BigQuery",
+						"IBM DB2 for LUW (Linux, Unix, Windows)",
+						"IBM DB2 for iSystem",
+						"Apache Hive",
+						"MariaDB",
+						"MySQL",
+						"Couchbase N1QL",
+						"Oracle PL/SQL",
+						"PostgreSQL",
+						"Amazon Redshift",
+						"SingleStoreDB",
+						"Snowflake",
+						"Spark",
+						"SQLite",
+						"TiDB",
+						"Trino (should also work for Presto, which is very similar dialect, though technically different)",
+						"Microsoft SQL Server Transact-SQL",
+						"Basic SQL - generally not recommended."
+					],
+					"default": "auto-detect",
+					"markdownDescription": "The SQL dialect to use.\n\n**It is recommended to explicitly select the SQL dialect you're working with.**\n\nBy default the extension tries to use the SQL language info provided by VSCode. But this only works for some dialects when an extension for that language is installed. If the auto-detection fails, the formatter will default to using 'sql' dialect - which will work for the most basic SQL."
+				},
+				"SQL-Formatter-VSCode.ignoreTabSettings": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "Ignore user and workplace settings for `tabSize` and `insertSpaces` (uses `#SQL-Formatter-VSCode.tabSizeOverride#` and `#SQL-Formatter-VSCode.insertSpacesOverride#`)?"
+				},
+				"SQL-Formatter-VSCode.tabSizeOverride": {
+					"type": "number",
+					"default": 2,
+					"minimum": 1,
+					"markdownDescription": "Override for `tabSize` if `#SQL-Formatter-VSCode.ignoreTabSettings#` is active"
+				},
+				"SQL-Formatter-VSCode.insertSpacesOverride": {
+					"type": "boolean",
+					"default": true,
+					"markdownDescription": "Override for `insertSpaces` if `#SQL-Formatter-VSCode.ignoreTabSettings#` is active"
+				},
+				"SQL-Formatter-VSCode.keywordCase": {
+					"type": "string",
+					"enum": [
+						"preserve",
+						"upper",
+						"lower"
+					],
+					"default": "preserve",
+					"markdownDescription": "Whether to print keywords in ALL CAPS, lowercase, or preserve existing"
+				},
+				"SQL-Formatter-VSCode.dataTypeCase": {
+					"type": "string",
+					"enum": [
+						"preserve",
+						"upper",
+						"lower"
+					],
+					"default": "preserve",
+					"markdownDescription": "Whether to print data types in ALL CAPS, lowercase, or preserve existing"
+				},
+				"SQL-Formatter-VSCode.functionCase": {
+					"type": "string",
+					"enum": [
+						"preserve",
+						"upper",
+						"lower"
+					],
+					"default": "preserve",
+					"markdownDescription": "Whether to print function names in ALL CAPS, lowercase, or preserve existing"
+				},
+				"SQL-Formatter-VSCode.identifierCase": {
+					"type": "string",
+					"enum": [
+						"preserve",
+						"upper",
+						"lower"
+					],
+					"default": "preserve",
+					"markdownDescription": "Whether to print identifiers in ALL CAPS, lowercase, or preserve existing (experimental)"
+				},
+				"SQL-Formatter-VSCode.indentStyle": {
+					"type": "string",
+					"enum": [
+						"standard",
+						"tabularLeft",
+						"tabularRight"
+					],
+					"enumDescriptions": [
+						"Standard SQL format, with cascading indents",
+						"Maintain space column between keyword and args, aligning keywords to left",
+						"Maintain space column between keyword and args, aligning keywords to right"
+					],
+					"default": "standard",
+					"markdownDescription": "Where to place keywords"
+				},
+				"SQL-Formatter-VSCode.logicalOperatorNewline": {
+					"type": "string",
+					"enum": [
+						"before",
+						"after"
+					],
+					"default": "before",
+					"markdownDescription": "Whether to break before or after AND and OR"
+				},
+				"SQL-Formatter-VSCode.expressionWidth": {
+					"type": "integer",
+					"default": 50,
+					"minimum": 0,
+					"markdownDescription": "Maximum number of characters between pair of parenthesis before breaking the expression to multiple lines"
+				},
+				"SQL-Formatter-VSCode.linesBetweenQueries": {
+					"type": "integer",
+					"default": 1,
+					"minimum": 0,
+					"markdownDescription": "How many newlines to place between each query / statement"
+				},
+				"SQL-Formatter-VSCode.denseOperators": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "Strip whitespace around operators such as + or >="
+				},
+				"SQL-Formatter-VSCode.newlineBeforeSemicolon": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "Whether to place semicolon on its own line or on previous line"
+				},
+				"SQL-Formatter-VSCode.paramTypes": {
+					"type": "object",
+					"markdownDescription": "Specifies parameter placeholders types to support."
+				}
+			}
+		}
+	},
+	"__metadata": {
+		"id": "f9b9597d-7c1b-42cb-a2ae-0ed87cd9fd43",
+		"publisherId": "6e8fb7be-7583-4d12-8858-909b73bc5ee2",
+		"publisherDisplayName": "Rene Saarsoo",
+		"targetPlatform": "undefined",
+		"isApplicationScoped": false,
+		"isPreReleaseVersion": false,
+		"hasPreReleaseVersion": false,
+		"installedTimestamp": 1734781114753,
+		"pinned": false,
+		"preRelease": false,
+		"source": "gallery",
+		"size": 1968520
+	}
+}
