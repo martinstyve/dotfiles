@@ -44,7 +44,7 @@ vim.opt.splitright = true
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 6
 
 vim.opt.clipboard:append("unnamedplus") -- "+y to copy to clipboard
 
@@ -57,4 +57,15 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 vim.opt.swapfile = false
 vim.opt.emoji = false
+
+-- adjusts errors/warning to be more subtle
+vim.diagnostic.config({
+  virtual_text = {
+    spacing = 2, -- distance from code
+    severity = { min = vim.diagnostic.severity.WARN }, -- remove info warning
+    prefix = "•", -- Dot as subtle warning symbol
+    source = "if_many",
+  },
+  float = { border = "none", source = "always", focusable = false, },
+})
 

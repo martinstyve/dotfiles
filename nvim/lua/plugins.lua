@@ -1,3 +1,7 @@
+-- remove warning for undefined vim object
+---@diagnostic disable: undefined-global
+
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -37,12 +41,15 @@ require("lazy").setup({
         "nvim-tree/nvim-tree.lua",
         requires = { "nvim-tree/nvim-web-devicons" },
         config = function()
-            require("nvim-tree").setup {}
-
-	vim.keymap.set("n", "<C-n>", ":NvimTreeToggle<CR>", { 
-		noremap = true, 
-		silent = true 
-	})
+            require("nvim-tree").setup({
+              filters = {
+                dotfiles = true,
+              },
+            })
+        	vim.keymap.set("n", "<C-n>", ":NvimTreeToggle<CR>", {
+		        noremap = true,
+		        silent = true
+	        })
         end,
     },
     -- language support parser (LSP)?
@@ -101,4 +108,3 @@ require("lazy").setup({
 	end,
     },
 })
-
