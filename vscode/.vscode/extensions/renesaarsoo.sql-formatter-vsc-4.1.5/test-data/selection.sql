@@ -1,5 +1,0 @@
-SELECT * FROM foo;
-
-SELECT * FROM bar;
-
-SELECT * FROM zap;
